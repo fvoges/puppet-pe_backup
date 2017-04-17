@@ -1,0 +1,30 @@
+#!/bin/bash
+
+umask <%= $umask %>
+
+# Poor's man error handling
+set -e
+
+# Try to ensure a sane PATH
+PATH="/sbin:/usr/sbin:/usr/local/sbin:/bin:/usr/bin:/usr/local/bin:/opt/puppetlabs/bin:/opt/puppetlabs/puppet/bin:$PATH"
+
+
+DEST_DIR="<%= $destination %>"
+
+DIR_LIST="<%= $dir_list.join(' ') %>"
+
+TS="$(date +%Y%m%d%H%M)"
+
+PREFIX="pe_backup"
+
+if [ ! -d "${DEST_DIR}" ]
+then
+  echo "FATAL: Invalid destination directory: '${DEST_DIR}'" > /dev/stderr
+  logger -p user.err -i -t pe_backup "FATAL: Invalid destination directory: '${DEST_DIR}'"
+  exit 1
+fi
+
+tar -C / -cjf "${DEST_DIR}/${PREFIX}-$TS.tar.bz2" ${DIR_LIST}
+
+
+

@@ -15,7 +15,7 @@ DIR_LIST="<%= $dir_list.join(' ') %>"
 
 TS="$(date +%Y%m%d%H%M)"
 
-PREFIX="pe_backup"
+PREFIX="<%= $prefix %>"
 
 if [ ! -d "${DEST_DIR}" ]
 then

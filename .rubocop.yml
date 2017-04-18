@@ -72,7 +72,7 @@ Lint/AmbiguousRegexpLiteral:
   Enabled: false
 
 # DISABLED
-Lint/Eval:
+Security/Eval:
   Enabled: false
 
 # DISABLED
@@ -464,7 +464,7 @@ Metrics/ParameterLists:
 Lint/RequireParentheses:
   Enabled: false
 
-Lint/SpaceBeforeFirstArg:
+Style/SpaceBeforeFirstArg:
   Enabled: false
 
 Style/ModuleFunction:
@@ -481,3 +481,6 @@ Style/Encoding:
 
 Style/SymbolArray:
   Enabled: false
+
+Style/ExtraSpacing:
+    Enabled: false

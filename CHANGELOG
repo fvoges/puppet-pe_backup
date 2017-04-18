@@ -1,2 +1,12 @@
-2017-04-18 Release 1.0.0
-- Initial release
+
+1.0.1 / 2017-04-18
+==================
+
+  * add example profile to README
+  * change template to use $prefix instead of hardcoded value
+  * remove unnecessary file
+
+1.0.0 / 2017-04-18
+==================
+
+  * Initial release

@@ -1,3 +1,7 @@
+# Puppet pe_backup Module
+
+[![Build Status](https://travis-ci.org/fvoges/puppet-pe_backup.svg)](https://travis-ci.org/fvoges/puppet-pe_backup)
+
 #### Table of Contents
 
 1. [Overview](#overview)

@@ -7,12 +7,6 @@
   "source": "https://github.com/fvoges/puppet-pe_backup.git",
   "project_page": "https://github.com/fvoges/puppet-pe_backup",
   "issues_url": "https://github.com/fvoges/puppet-pe_backup/issues",
-  "requirements": [
-    {
-      "name": "puppet",
-      "version_requirement": ">= 4.4.0 < 5.0.0"
-    }
-  ],
   "dependencies": [
     {
       "name": "puppetlabs-stdlib",
@@ -49,5 +43,14 @@
         "12"
       ]
     }
-  ]
+  ],
+  "requirements": [
+    {
+      "name": "puppet",
+      "version_requirement": ">= 4.4.0 < 5.0.0"
+    }
+  ],
+  "pdk-version": "1.11.0",
+  "template-url": "pdk-default#1.11.0",
+  "template-ref": "1.11.0-0-g67637d4"
 }

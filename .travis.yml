@@ -1,41 +1,45 @@
 ---
-sudo: false
-cache: bundler
+dist: xenial
 language: ruby
-bundler_args: --without development system_tests
-before_install: rm Gemfile.lock || true
+cache: bundler
+before_install:
+  - bundle -v
+  - rm -f Gemfile.lock
+  - gem update --system $RUBYGEMS_VERSION
+  - gem --version
+  - bundle -v
+script:
+  - 'bundle exec rake $CHECK'
+bundler_args: --without system_tests
 rvm:
-  - 2.1
-#  - 2.2
-#  - 2.3
-script: bundle exec rake test
-env:
-  - PUPPET_GEM_VERSION="~> 4.4.0" STRICT_VARIABLES=yes FACTER_GEM_VERSION="~> 2.4.0"
-  - PUPPET_GEM_VERSION="~> 4.5.0" STRICT_VARIABLES=yes FACTER_GEM_VERSION="~> 2.4.0"
-  - PUPPET_GEM_VERSION="~> 4.6.0" STRICT_VARIABLES=yes FACTER_GEM_VERSION="~> 2.4.0"
-  - PUPPET_GEM_VERSION="~> 4.7.0" STRICT_VARIABLES=yes FACTER_GEM_VERSION="~> 2.4.0"
-  - PUPPET_GEM_VERSION="~> 4.8.0" STRICT_VARIABLES=yes FACTER_GEM_VERSION="~> 2.4.0"
-  - PUPPET_GEM_VERSION="~> 4.9.0" STRICT_VARIABLES=yes FACTER_GEM_VERSION="~> 2.4.0"
-#matrix:
-#  exclude:
-#   Ruby 1.9.3
-#  - rvm: 1.9.3
-#    env: PUPPET_GEM_VERSION="~> 2.7.0"
-#
-#  # Ruby 2.0.0
-#  - rvm: 2.0.0
-#    env: PUPPET_GEM_VERSION="~> 2.7.0"
-#
-#  # Ruby 2.1
-#  - rvm: 2.1
-#    env: PUPPET_GEM_VERSION="~> 2.7.0"
-#  - rvm: 2.1
-#    env: PUPPET_GEM_VERSION="~> 3.2.0"
-#  - rvm: 2.1
-#    env: PUPPET_GEM_VERSION="~> 3.3.0"
-#  - rvm: 2.1
-#    env: PUPPET_GEM_VERSION="~> 3.4.0"
-addons:
-  code_climate:
-    repo_token:
-      secure: c3pOGEDtUztGKBXzbbm/j8Jox6bAzWAZ0dSLlQ76KyFapa3ME3rawx+WASH65l/LrwYVvkvl2sMA1fj+yvK4FHQY22bsU709/lG0g9RQ2G96cFfVE+KtyPVfSvWtI9wUZPA+VKp3D1XXtOnoJoyuU/4vvndeiPHcvHSOoPwKFCaUGZEATQ6O6pGbwjBSgyG9ZG84B1NG/G6fRWszm5P4RykGuPas8jgdM1la/c3ZoZbmgxgWqjlQ0AbHuN0HVWQmfqhPsO2Kv7L6wP/AznYYXX2N55uLxzvBbfnvLkWznbV79JghgKSUykRAl9y3H25BW2Ya+K77Mor5sEKTU5yN4zD0odPuPhoKyfTCneX7PoM1emU+WtpCsxS/lXwMKaZzP3AlmyyhWazBqa8bKyqFA4CoBATf5/NFRMa8nI/BH4yYVi3yx53vGvv71j3nAs+XmI/lLGmiR2vXt0FJg8XyZ/73EcjwkxZAkuNh+22q1PkeO9fDKcSE3JFSHoJ5Isu+UrwEzfA0RDTCaUsGLgRWKWxj7GHeVUhpPmFHhCgRfYy9CWgWMBq7E7PRo/dXEUIrJcqhCtkM8hXM3+bxbokfc+HAPFWEFfekSy+lATRL59KcYDDgsMNUmMygnkAkMqYdD4SxH/GDXPw6WX8rYNo/OF+Wyaoc4gpeNtVvQ5viWJM=
+  - 2.5.3
+stages:
+  - static
+  - spec
+  - acceptance
+  -
+    if: tag =~ ^v\d
+    name: deploy
+matrix:
+  fast_finish: true
+  include:
+    -
+      env: CHECK="check:symlinks check:git_ignore check:dot_underscore check:test_file rubocop syntax lint metadata_lint"
+      stage: static
+    -
+      env: PUPPET_GEM_VERSION="~> 5.0" CHECK=parallel_spec
+      rvm: 2.4.5
+      stage: spec
+    -
+      env: PUPPET_GEM_VERSION="~> 6.0" CHECK=parallel_spec
+      rvm: 2.5.3
+      stage: spec
+    -
+      env: DEPLOY_TO_FORGE=yes
+      stage: deploy
+branches:
+  only:
+    - master
+    - /^v\d/
+notifications:
+  email: false

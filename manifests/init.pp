@@ -28,25 +28,6 @@ class pe_backup (
   Enum['monolithic','master','db','console'] $nodetype      = $::pe_backup::params::nodetype,
 ) inherits pe_backup::params {
 
-  case $nodetype {
-    'monolithic': {
-      $dir_list = $dirs_common + $dirs_master + $dirs_db + $dirs_console + $dirs_extra
-    }
-    'master': {
-      $dir_list = $dirs_common + $dirs_master + $dirs_extra
-    }
-    'db': {
-      $dir_list = $dirs_common + $dirs_db + $dirs_extra
-    }
-    'console': {
-      $dir_list = $dirs_common + $dirs_console + $dirs_extra
-    }
-    default: {
-      # We should never reach this point, but...
-      fail("Invalid node type: ${nodetype}")
-    }
-  }
-
   contain pe_backup::install
   contain pe_backup::service
 

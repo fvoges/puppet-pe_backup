@@ -8,10 +8,10 @@ describe 'pe_backup' do
           facts
         end
 
-        context "pe_backup class with destination => /tmp" do
+        context 'pe_backup class with destination => /tmp' do
           let(:params) do
             {
-              :destination => '/tmp',
+              destination: '/tmp',
             }
           end
 
@@ -26,17 +26,4 @@ describe 'pe_backup' do
       end
     end
   end
-
-#  context 'unsupported operating system' do
-#    describe 'pe_backup class without any parameters on Solaris/Nexenta' do
-#      let(:facts) do
-#        {
-#          :osfamily        => 'Solaris',
-#          :operatingsystem => 'Nexenta',
-#        }
-#      end
-#
-#      it { expect { is_expected.to contain_cron('pe_backup') }.to raise_error(Puppet::Error, /Nexenta not supported/) }
-#    end
-#  end
 end

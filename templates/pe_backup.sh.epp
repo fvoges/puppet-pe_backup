@@ -1,21 +1,22 @@
-#!/bin/bash
+<%- | String $destination,
+      String $umask,
+      Optional[String] $gpg_key_id,
+      String $gpg_key_server,
+| -%>
+#!/bin/bash -e
+#
+# MANAGED BY PUPPET - DO NOT EDIT!
+#
 
 umask <%= $umask %>
-
-# Poor's man error handling
-set -e
 
 # Try to ensure a sane PATH
 PATH="/sbin:/usr/sbin:/usr/local/sbin:/bin:/usr/bin:/usr/local/bin:/opt/puppetlabs/bin:/opt/puppetlabs/puppet/bin:$PATH"
 
-
 DEST_DIR="<%= $destination %>"
-
-DIR_LIST="<%= $dir_list.join(' ') %>"
-
-TS="$(date +%Y%m%d%H%M)"
-
-PREFIX="<%= $prefix %>"
+TIME_STAMP="$(date +%Y%m%d%H%M)"
+PE_BACKUP_FILE="${DEST_DIR}/pe_backup_${TIME_STAMP}.tar"
+KEYS_BACKUP_FILE="${DEST_DIR}/pe_keys_${TIME_STAMP}.tar"
 
 if [ ! -d "${DEST_DIR}" ]
 then
@@ -24,7 +25,22 @@ then
   exit 1
 fi
 
-tar -C / -cjf "${DEST_DIR}/${PREFIX}-$TS.tar.bz2" ${DIR_LIST}
+<% if $gpg_key_id =~ String[1] { -%>
+logger -p user.info -t pe_backup "Downloading GPG key <%= $gpg_key_id %> from <%= $gpg_key_server %>"
+gpg --keyserver "<%= $gpg_key_server %>" --receive-keys "<%= $gpg_key_id %>"
 
+<% } -%>
+logger -p user.info -t pe_backup "Creating Puppet Enterprise backup"
+puppet backup create --dir="${BACKUP_DIR}" --name="${PE_BACKUP_FILE}.gz"<% if $gpg_key_id =~ String[1] { %> --gpgkey=<%= $gpg_key_id %><% } %>
 
+logger -p user.info -t pe_backup "Creating Puppet Enterprise keys backup"
+<% if $gpg_key_id =~ String[1] { -%>
+tar c /etc/puppetlabs/*/conf.d/secrets | \
+  gpg -e --compress-algo bzip2 -r "<%= $gpg_key_id %>" --always-trust \
+  > "${KEYS_BACKUP_FILE}.bz2.gpg"
+<% } else { -%>
+tar cj /etc/puppetlabs/*/conf.d/secrets > "${KEYS_BACKUP_FILE}.bz2"
+<% } -%>
 
+logger -p user.info -t pe_backup "Removing old Puppet Enterprise backups"
+find "${BACKUP_DIR}" -type f -name "pe_*.tar*" -mtime +14 -daystart -exec echo rm -f {} +

@@ -1,13 +1,13 @@
-# == Class pe_backup::service
+# Class that manages the cron job to run the backup script. Should not be used directly.
 #
-# This class is meant to be called from pe_backup.
-# It ensure the service is running.
+# @author Federico Voges
+# @api private
 #
 class pe_backup::service {
-  $script  = $::pe_backup::script
-  $hour    = $::pe_backup::hour
-  $minute  = $::pe_backup::minute
-  $weekday = $::pe_backup::weekday
+  $script  = $pe_backup::script_path
+  $hour    = $pe_backup::cron_hour
+  $minute  = $pe_backup::cron_minute
+  $weekday = $pe_backup::cron_weekday
 
   cron { 'pe_backup':
     command => $script,

@@ -17,11 +17,10 @@ describe 'pe_backup' do
 
           it { is_expected.to compile.with_all_deps }
 
-          it { is_expected.to contain_class('pe_backup::params') }
           it { is_expected.to contain_class('pe_backup::install').that_comes_before('Class[pe_backup::service]') }
 
           it { is_expected.to contain_cron('pe_backup') }
-          it { is_expected.to contain_file('/usr/local/bin/pe_backup.sh').with_ensure('file') }
+          it { is_expected.to contain_file('pe_backup').with_ensure('file') }
         end
       end
     end

@@ -61,7 +61,7 @@ The backups will be stored in the location specified with the `destination` para
 
 ## Reference
 
-See [REFERENCE.md](https://github.com/fvoges/puppetlabs-pe_backup/blob/master/REFERENCE.md) for the full reference.
+See [REFERENCE.md](https://github.com/fvoges/puppet-pe_backup/blob/main/REFERENCE.md) for the full reference.
 
 ## Limitations
 

@@ -1,47 +1,31 @@
-# == Class pe_backup::install
+# Class that manages the backup script. Should not be used directly.
 #
-# This class is called from pe_backup for install.
+# @author <NAME>
+# @license Apache 2.0
+#
+# @api private
+#
+#
+# @author Federico Voges
+# @api private
 #
 class pe_backup::install {
-  $destination  = $::pe_backup::destination
-  $dirs_common  = $::pe_backup::dirs_common
-  $dirs_console = $::pe_backup::dirs_console
-  $dirs_db      = $::pe_backup::dirs_db
-  $dirs_extra   = $::pe_backup::dirs_extra
-  $dirs_master  = $::pe_backup::dirs_master
-  $nodetype     = $::pe_backup::nodetype
-  $prefix       = $::pe_backup::prefix
-  $script       = $::pe_backup::script
-  $umask        = $::pe_backup::umask
-
-  case $nodetype {
-    'monolithic': {
-      $dir_list = $dirs_common + $dirs_master + $dirs_db + $dirs_console + $dirs_extra
-    }
-    'master': {
-      $dir_list = $dirs_common + $dirs_master + $dirs_extra
-    }
-    'db': {
-      $dir_list = $dirs_common + $dirs_db + $dirs_extra
-    }
-    'console': {
-      $dir_list = $dirs_common + $dirs_console + $dirs_extra
-    }
-    default: {
-      # We should never reach this point, but...
-      fail("Invalid node type: ${nodetype}")
-    }
-  }
+  $destination    = $pe_backup::destination
+  $script         = $pe_backup::script_path
+  $umask          = $pe_backup::umask
+  $gpg_key_id     = $pe_backup::gpg_key_id
+  $gpg_key_server = $pe_backup::gpg_key_server
 
   $template_params = {
-    'destination' => $destination,
-    'dir_list'    => $dir_list,
-    'prefix'      => $prefix,
-    'umask'       => $umask,
+    'destination'    => $destination,
+    'umask'          => $umask,
+    'gpg_key_id'     => $gpg_key_id,
+    'gpg_key_server' => $gpg_key_server,
   }
 
-  file { $script:
+  file { 'pe_backup':
     ensure  => 'file',
+    path    => $script,
     owner   => 'root',
     group   => 'root',
     mode    => '0750',

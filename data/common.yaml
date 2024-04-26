@@ -1,0 +1,9 @@
+---
+pe_backup::script_path: '/usr/local/bin/pe_backup.sh'
+pe_backup::script_user: 'root'
+pe_backup::script_group: 'root'
+pe_backup::umask: '0077'
+pe_backup::cron_hour: '3'
+pe_backup::cron_minute: '33'
+pe_backup::cron_weekday: '*'
+pe_backup::gpg_key_server: 'hkps://keys.openpgp.org'

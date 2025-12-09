@@ -1,5 +1,10 @@
 # Puppet pe_backup Module
 
+## DEPRECATED
+
+I no longer use Puppet Enterprise and I've migrated my home lab to use [OpenVox](https://voxpupuli.org/openvox/). That means that I have no way to properly test this module.
+
+
 ![Build status](https://github.com/fvoges/puppet-pe_backup/actions/workflows/nightly.yaml/badge.svg)
 
 #### Table of Contents
